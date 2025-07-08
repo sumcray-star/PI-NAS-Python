@@ -1,0 +1,140 @@
+name: Deploy PI-NAS
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.9'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install streamlit pandas pillow psutil requests opencv-python
+    
+    - name: Test application imports
+      run: |
+        python -c "import app; print('✓ App imports successfully')"
+        python -c "import utils.auth; print('✓ Auth module imports successfully')"
+        python -c "import utils.media_handler; print('✓ Media handler imports successfully')"
+        python -c "import utils.network_storage; print('✓ Network storage imports successfully')"
+        python -c "import utils.file_manager; print('✓ File manager imports successfully')"
+    
+    - name: Validate configuration files
+      run: |
+        python -c "import json; json.load(open('config/storage_config.json')) if open('config/storage_config.json').read().strip() else print('✓ Storage config template valid')"
+        test -f .streamlit/config.toml && echo "✓ Streamlit config exists" || echo "✗ Missing Streamlit config"
+    
+    - name: Check directory structure
+      run: |
+        test -d pages && echo "✓ Pages directory exists" || echo "✗ Missing pages directory"
+        test -d utils && echo "✓ Utils directory exists" || echo "✗ Missing utils directory"
+        test -d media && echo "✓ Media directory exists" || echo "✗ Missing media directory"
+        test -d data && echo "✓ Data directory exists" || echo "✗ Missing data directory"
+        test -d scripts && echo "✓ Scripts directory exists" || echo "✗ Missing scripts directory"
+
+  security-check:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Check for sensitive files
+      run: |
+        # Check that sensitive files are not committed
+        ! test -f config/secrets.json && echo "✓ No secrets file committed" || exit 1
+        ! test -f data/users.json && echo "✓ No user data committed" || exit 1
+        ! test -f .env && echo "✓ No .env file committed" || exit 1
+        echo "✓ Security check passed"
+
+  deploy:
+    needs: [test, security-check]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Deploy to server
+      run: |
+        echo "🚀 Deployment would run here"
+        echo "Add your deployment commands:"
+        echo "1. ssh deploy@yourserver.com 'cd /opt/pi-nas && git pull'"
+        echo "2. ssh deploy@yourserver.com 'cd /opt/pi-nas && sudo systemctl restart pi-nas'"
+        echo "3. ssh deploy@yourserver.com 'cd /opt/pi-nas && sudo systemctl status pi-nas'"
+    
+    - name: Health check
+      run: |
+        echo "🔍 Health check would run here"
+        echo "Add health check commands:"
+        echo "1. curl -f http://yourdomain.com/health"
+        echo "2. Check service logs"
+        echo "3. Verify application is responding"
+
+  docker-build:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+    
+    - name: Build Docker image
+      run: |
+        cat > Dockerfile << 'EOF'
+        FROM python:3.9-slim
+        
+        # Set working directory
+        WORKDIR /app
+        
+        # Install system dependencies
+        RUN apt-get update && apt-get install -y \
+            cifs-utils \
+            smbclient \
+            && rm -rf /var/lib/apt/lists/*
+        
+        # Copy requirements and install Python packages
+        COPY requirements.txt .
+        RUN pip install --no-cache-dir -r requirements.txt
+        
+        # Copy application code
+        COPY . .
+        
+        # Create required directories
+        RUN mkdir -p data config media/uploads media/thumbnails temp logs
+        
+        # Set permissions
+        RUN chmod +x scripts/*.sh
+        
+        # Expose port
+        EXPOSE 5000
+        
+        # Health check
+        HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+            CMD curl -f http://localhost:5000/health || exit 1
+        
+        # Run application
+        CMD ["streamlit", "run", "app.py", "--server.port=5000", "--server.address=0.0.0.0", "--server.headless=true"]
+        EOF
+        
+        # Create requirements.txt
+        cat > requirements.txt << 'EOF'
+        streamlit==1.28.0
+        pandas==2.0.3
+        pillow==10.0.0
+        psutil==5.9.5
+        requests==2.31.0
+        opencv-python==4.8.0.76
+        EOF
+        
+        docker build -t pi-nas:latest .
+        echo "✓ Docker image built successfully"

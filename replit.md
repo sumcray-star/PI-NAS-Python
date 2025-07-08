@@ -105,6 +105,16 @@ pi-nas/
 ```
 Changelog:
 - July 07, 2025. Initial setup
+- July 07, 2025. Added comprehensive deployment documentation covering:
+  - Complete Raspberry Pi OMV setup guide with hardware requirements
+  - Detailed network configuration with router setup and DNS
+  - GitHub deployment with CI/CD pipeline
+  - Production server installation with systemd service
+  - SSL/TLS configuration with Let's Encrypt
+  - Security hardening with firewall and Fail2Ban
+  - VPN setup for secure remote access
+  - Performance optimization and monitoring
+  - Troubleshooting guides for common issues
 ```
 
 ## User Preferences
