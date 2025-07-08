@@ -115,6 +115,13 @@ Changelog:
   - VPN setup for secure remote access
   - Performance optimization and monitoring
   - Troubleshooting guides for common issues
+- July 08, 2025. Created distributed setup architecture:
+  - Web interface runs on main computer for better performance
+  - Raspberry Pi handles dedicated storage (like Plex architecture)
+  - Added distributed setup guide with step-by-step instructions
+  - YouTube video companion guide for tutorial integration
+  - Enhanced network storage configuration for remote Pi connection
+  - Updated configuration for auto-mounting and connection status
 ```
 
 ## User Preferences

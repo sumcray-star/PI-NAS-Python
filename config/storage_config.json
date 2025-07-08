@@ -1,11 +1,14 @@
 {
-  "server_ip": "",
-  "share_name": "",
-  "username": "",
+  "server_ip": "192.168.1.100",
+  "share_name": "media",
+  "username": "pi",
+  "password": "",
   "mount_point": "/mnt/pi-nas",
   "protocol": "smb",
   "port": 445,
-  "auto_mount": false,
+  "auto_mount": true,
   "mount_timeout": 30,
-  "enabled": false
+  "enabled": true,
+  "description": "Raspberry Pi storage server for media files",
+  "sync_enabled": true
 }
