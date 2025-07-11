@@ -4,5 +4,11 @@
     "password": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
     "is_admin": true,
     "created_at": "2025-01-01T00:00:00Z"
+  },
+  {
+    "username": "Sumit",
+    "password": "333c680ad2b270fb61a439eba9424fca33245c25d983bde4de919ed90b04a078",
+    "is_admin": false,
+    "created_at": "2025-07-11T00:14:51.929569"
   }
 ]
