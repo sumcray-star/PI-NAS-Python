@@ -1,0 +1,58 @@
+[project]
+name = "pi-nas"
+version = "1.0.0"
+description = "A Plex-like media server application for Raspberry Pi with distributed architecture"
+authors = [
+    { name = "PI-NAS Team", email = "team@pi-nas.com" }
+]
+dependencies = [
+    "streamlit==1.28.0",
+    "pandas==2.0.3",
+    "pillow==10.0.0",
+    "psutil==5.9.5",
+    "requests==2.31.0",
+    "opencv-python==4.8.0.76"
+]
+readme = "README.md"
+requires-python = ">= 3.8"
+
+[project.urls]
+Homepage = "https://github.com/your-username/pi-nas"
+Repository = "https://github.com/your-username/pi-nas"
+Documentation = "https://github.com/your-username/pi-nas/docs"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.ruff]
+line-length = 100
+target-version = "py38"
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+    "C4", # flake8-comprehensions
+    "UP", # pyupgrade
+]
+ignore = [
+    "E501",  # line too long, handled by black
+    "B008",  # do not perform function calls in argument defaults
+    "C901",  # too complex
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["pi_nas"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
