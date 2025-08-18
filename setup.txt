@@ -1,0 +1,60 @@
+🎯 Your Setup in 3 Parts:
+Part 1: Raspberry Pi NAS Server
+What it does: 24/7 storage server (like a mini data center)
+
+Quick Setup:
+
+# SSH into your Pi and run:
+curl -sSL https://raw.githubusercontent.com/sumcray-star/PI-NAS-Python/main/scripts/pi_setup.sh | bash
+This automatically:
+
+Installs Samba file sharing
+Creates media directories
+Sets up network access
+Configures security
+Part 2: Your Computer (Media Server)
+What it does: Web interface for streaming and management
+
+Quick Setup:
+
+# Run on your computer:
+curl -sSL https://raw.githubusercontent.com/sumcray-star/PI-NAS-Python/main/scripts/computer_setup.sh | bash
+This automatically:
+
+Downloads PI-NAS application
+Sets up Python environment
+Installs all dependencies
+Creates startup scripts
+Part 3: Connect Them Together
+Start server: ./start_pi_nas.sh
+Open: http://localhost:8501
+Login: admin / password
+Go to "Network Storage" → Enter Pi's IP
+Test connection → Save → Mount
+📚 Complete Documentation Created:
+QUICK_START.md - 15-minute setup guide
+COMPLETE_SETUP_GUIDE.md - Detailed step-by-step instructions
+scripts/pi_setup.sh - Automated Raspberry Pi configuration
+scripts/computer_setup.sh - Automated computer setup
+VSCODE_SETUP.md - VS Code development guide
+🎬 How It Works Like Plex:
+Your Architecture:
+
+Computer: Runs web interface (powerful for streaming)
+Raspberry Pi: Stores all media files (24/7 always-on)
+Network: SMB/CIFS connection between them
+Features:
+
+Upload files through web browser → stored on Pi
+Stream videos directly from Pi storage
+Organize media by type automatically
+Generate video thumbnails
+Search and filter capabilities
+Multi-user support with authentication
+🚀 Getting Started:
+Run the Pi setup script on your Raspberry Pi
+Run the computer setup script on your computer
+Connect them using the web interface
+Start uploading media files
+Stream and enjoy your personal media server
+Your PI-NAS will work exactly like Plex - computer handles the interface and streaming, while Raspberry Pi provides dedicated storage that's always available on your network.
