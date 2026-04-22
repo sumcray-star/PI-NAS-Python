@@ -1,0 +1,86 @@
+version: '3.8'
+
+services:
+  streamlit:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    
+    container_name: pi-media-server
+    
+    # Ports
+    ports:
+      - "8501:8501"  # Streamlit port
+    
+    # Volumes for persistent storage
+    volumes:
+      # Application data
+      - ./data:/app/data              # User authentication data
+      - ./config:/app/config          # Configuration files
+      - ./media:/app/media            # Media uploads and thumbnails
+      - ./logs:/app/logs              # Application logs
+      - ./temp:/app/temp              # Temporary files
+      
+      # Optional: Mount Raspberry Pi SMB share
+      # Uncomment below if you have SMB share mounted on host
+      # - /mnt/pi-nas:/app/pi-storage  # Raspberry Pi network storage
+    
+    # Environment variables
+    environment:
+      # Streamlit configuration
+      STREAMLIT_SERVER_HEADLESS: "true"
+      STREAMLIT_SERVER_PORT: "8501"
+      STREAMLIT_SERVER_ADDRESS: "0.0.0.0"
+      STREAMLIT_LOGGER_LEVEL: "info"
+      PYTHONUNBUFFERED: "1"
+      
+      # Optional: Raspberry Pi connection settings
+      # Uncomment and configure below
+      # PI_SERVER_IP: "192.168.1.100"
+      # PI_SHARE_NAME: "media"
+      # PI_USERNAME: "pi"
+      # PI_MOUNT_POINT: "/mnt/pi-nas"
+    
+    # Resource limits (optimized for t2.micro)
+    deploy:
+      resources:
+        limits:
+          cpus: '0.8'
+          memory: 800M
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+    
+    # Restart policy
+    restart: unless-stopped
+    
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    
+    # Security options
+    security_opt:
+      - no-new-privileges:true
+    
+    # For accessing Raspberry Pi SMB mounts, uncomment below
+    # cap_add:
+    #   - SYS_ADMIN
+    # devices:
+    #   - /dev/fuse
+    # privileged: true
+
+# Optional: Network configuration
+networks:
+  default:
+    driver: bridge
+
+# Volume drivers (for persistent storage)
+volumes:
+  # If using named volumes instead of bind mounts
+  # data:
+  # config:
+  # media:
+  # logs:

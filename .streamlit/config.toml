@@ -1,3 +1,4 @@
+pip install streamlit pandas pillow psutil requests opencv-python
 [server]
 headless = true
 address = "0.0.0.0"
